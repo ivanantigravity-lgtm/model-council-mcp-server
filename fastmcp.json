@@ -1,0 +1,63 @@
+{
+  "mcpServers": {
+    "model-council-mcp-server": {
+      "command": "uv",
+      "args": [
+        "run",
+        "python",
+        "-m",
+        "model_council_mcp_server.server"
+      ],
+      "cwd": ".",
+      "env": {
+        "POLZA_BASE_URL": "https://polza.ai/api/v1",
+        "COUNCIL_GROK_MODEL": "x-ai/grok-4",
+        "COUNCIL_GEMINI_MODEL": "google/gemini-2.5-flash",
+        "COUNCIL_DEEPSEEK_MODEL": "deepseek/deepseek-chat-v3.1",
+        "LOG_LEVEL": "INFO"
+      }
+    }
+  },
+  "server": {
+    "name": "model-council-mcp-server",
+    "version": "0.1.0",
+    "description": "Three raw model perspectives from Grok, Gemini, and DeepSeek for Claude to summarize",
+    "entrypoint": "model_council_mcp_server.server:create_app",
+    "dependencies": [
+      "fastmcp>=2.11.0",
+      "httpx>=0.28.1",
+      "pydantic>=2.8.2"
+    ],
+    "environment": {
+      "POLZA_API_KEY": {
+        "required": true,
+        "description": "Polza API key"
+      },
+      "POLZA_BASE_URL": {
+        "required": false,
+        "default": "https://polza.ai/api/v1",
+        "description": "Base URL for the Polza API"
+      },
+      "COUNCIL_GROK_MODEL": {
+        "required": false,
+        "default": "x-ai/grok-4",
+        "description": "Grok model id"
+      },
+      "COUNCIL_GEMINI_MODEL": {
+        "required": false,
+        "default": "google/gemini-2.5-flash",
+        "description": "Gemini model id"
+      },
+      "COUNCIL_DEEPSEEK_MODEL": {
+        "required": false,
+        "default": "deepseek/deepseek-chat-v3.1",
+        "description": "DeepSeek model id"
+      },
+      "LOG_LEVEL": {
+        "required": false,
+        "default": "INFO",
+        "description": "Logging level"
+      }
+    }
+  }
+}

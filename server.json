@@ -1,0 +1,21 @@
+{
+  "$schema": "https://static.modelcontextprotocol.io/schemas/2025-12-11/server.schema.json",
+  "name": "io.github.ivanantigravity-lgtm/model-council-mcp-server",
+  "description": "Three-model MCP server returning Grok, Gemini, and DeepSeek outputs for Claude.",
+  "repository": {
+    "url": "https://github.com/ivanantigravity-lgtm/model-council-mcp-server",
+    "source": "github"
+  },
+  "version": "0.1.0",
+  "packages": [
+    {
+      "registryType": "pypi",
+      "registryBaseUrl": "https://pypi.org",
+      "identifier": "model-council-mcp-server",
+      "version": "0.1.0",
+      "transport": {
+        "type": "stdio"
+      }
+    }
+  ]
+}
