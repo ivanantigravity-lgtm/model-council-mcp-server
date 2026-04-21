@@ -17,17 +17,15 @@ from .polza_client import PolzaClient
 LOGGER = logging.getLogger(__name__)
 MODEL_GUIDE = """Three-model scan guide:
 
-Grok:
-- strong at bold framing and clear positioning
-- weak at overconfidence and hot takes
+China preset:
+- moonshotai/kimi-k2.5
+- qwen/qwen3.6-plus
+- deepseek/deepseek-v3.2
 
-Gemini:
-- strong at structure and clean synthesis
-- weak at being too smooth or too cautious
-
-DeepSeek:
-- strong at logic, criticism, and finding weak assumptions
-- weak at dryness and over-analysis
+USA preset:
+- google/gemini-3.1-flash-lite-preview
+- x-ai/grok-4.1-fast
+- openai/gpt-5.4-nano
 
 Use this server when you want three short perspectives and let Claude summarize them.
 Do not use it for simple facts.
@@ -94,6 +92,50 @@ class CouncilEngine:
         self.settings = settings
         self.client = client
 
+    def _preset_models(self, preset: str) -> list[tuple[str, str, str]]:
+        if preset == "usa":
+            return [
+                (
+                    "gemini",
+                    self.settings.usa_gemini_model,
+                    "You are Gemini. Give the most structured and balanced version of the answer. "
+                    + COMPRESSION_RULES,
+                ),
+                (
+                    "grok",
+                    self.settings.usa_grok_model,
+                    "You are Grok. Give a strong position fast. Be concrete and decisive, but do not ramble. "
+                    + COMPRESSION_RULES,
+                ),
+                (
+                    "openai",
+                    self.settings.usa_openai_model,
+                    "You are GPT. Be crisp, direct, and practically useful. "
+                    + COMPRESSION_RULES,
+                ),
+            ]
+
+        return [
+            (
+                "moonshot",
+                self.settings.china_moonshot_model,
+                "You are Kimi. Be practical, concise, and useful. Focus on execution and concrete next steps. "
+                + COMPRESSION_RULES,
+            ),
+            (
+                "qwen",
+                self.settings.china_qwen_model,
+                "You are Qwen. Be structured, compact, and sharp. Focus on trade-offs and clean framing. "
+                + COMPRESSION_RULES,
+            ),
+            (
+                "deepseek",
+                self.settings.china_deepseek_model,
+                "You are DeepSeek. Focus on logic, weak assumptions, and failure modes. "
+                + COMPRESSION_RULES,
+            ),
+        ]
+
     async def _run_model(
         self,
         *,
@@ -125,6 +167,7 @@ class CouncilEngine:
         *,
         task: str,
         context: str | None = None,
+        preset: str = "china",
         format_hint: str = "verdict, 3 key points, 2 risks, recommendation",
     ) -> dict[str, Any]:
         context_block = context.strip() if context else "No extra context."
@@ -135,43 +178,22 @@ class CouncilEngine:
             f"Rules:\n{COMPRESSION_RULES}"
         )
 
-        grok_system = (
-            "You are Grok. Give a strong position fast. Be concrete and decisive, but do not ramble. "
-            + COMPRESSION_RULES
-        )
-        gemini_system = (
-            "You are Gemini. Give the most structured and balanced version of the answer. "
-            + COMPRESSION_RULES
-        )
-        deepseek_system = (
-            "You are DeepSeek. Focus on logic, weak assumptions, and failure modes. "
-            + COMPRESSION_RULES
-        )
-
         responses = await asyncio.gather(
-            self._run_model(
-                role_name="grok",
-                model=self.settings.grok_model,
-                system_prompt=grok_system,
-                task_prompt=shared_task,
-            ),
-            self._run_model(
-                role_name="gemini",
-                model=self.settings.gemini_model,
-                system_prompt=gemini_system,
-                task_prompt=shared_task,
-            ),
-            self._run_model(
-                role_name="deepseek",
-                model=self.settings.deepseek_model,
-                system_prompt=deepseek_system,
-                task_prompt=shared_task,
-            ),
+            *[
+                self._run_model(
+                    role_name=role_name,
+                    model=model,
+                    system_prompt=system_prompt,
+                    task_prompt=shared_task,
+                )
+                for role_name, model, system_prompt in self._preset_models(preset)
+            ]
         )
 
         return {
             "task": task,
             "context": context_block,
+            "preset": preset,
             "format_hint": format_hint,
             "responses": responses,
         }
@@ -201,10 +223,11 @@ def create_app() -> FastMCP:
     async def tri_model_scan(
         task: str,
         context: str | None = None,
+        preset: str = "china",
         format_hint: str = "verdict, 3 key points, 2 risks, recommendation",
     ) -> str:
         """Run the same task through Grok, Gemini, and DeepSeek once each and return compact JSON with raw model answers."""
-        result = await engine.scan(task=task, context=context, format_hint=format_hint)
+        result = await engine.scan(task=task, context=context, preset=preset, format_hint=format_hint)
         return json.dumps(result, ensure_ascii=False, indent=2)
 
     @app.tool
@@ -212,6 +235,7 @@ def create_app() -> FastMCP:
         objective: str,
         options: list[str],
         context: str | None = None,
+        preset: str = "china",
     ) -> str:
         """Compare several options through three different model families."""
         rendered_options = "\n".join(f"- {option}" for option in options)
@@ -223,6 +247,7 @@ def create_app() -> FastMCP:
         result = await engine.scan(
             task=task,
             context=context,
+            preset=preset,
             format_hint="best option, 3 reasons, 2 risks, recommendation",
         )
         return json.dumps(result, ensure_ascii=False, indent=2)
@@ -232,6 +257,7 @@ def create_app() -> FastMCP:
         plan: str,
         success_criteria: str | None = None,
         context: str | None = None,
+        preset: str = "china",
     ) -> str:
         """Stress-test a plan through three different model families."""
         task = (
@@ -242,6 +268,7 @@ def create_app() -> FastMCP:
         result = await engine.scan(
             task=task,
             context=context,
+            preset=preset,
             format_hint="verdict, weak assumptions, 2 major risks, fixes, recommendation",
         )
         return json.dumps(result, ensure_ascii=False, indent=2)

@@ -12,9 +12,12 @@ class Settings(BaseModel):
 
     polza_api_key: str
     polza_base_url: str = "https://polza.ai/api/v1"
-    grok_model: str = "x-ai/grok-4"
-    gemini_model: str = "google/gemini-2.5-flash"
-    deepseek_model: str = "deepseek/deepseek-chat-v3.1"
+    china_moonshot_model: str = "moonshotai/kimi-k2.5"
+    china_qwen_model: str = "qwen/qwen3.6-plus"
+    china_deepseek_model: str = "deepseek/deepseek-v3.2"
+    usa_gemini_model: str = "google/gemini-3.1-flash-lite-preview"
+    usa_grok_model: str = "x-ai/grok-4.1-fast"
+    usa_openai_model: str = "openai/gpt-5.4-nano"
     log_level: str = "INFO"
 
     @classmethod
@@ -22,8 +25,11 @@ class Settings(BaseModel):
         return cls(
             polza_api_key=os.environ["POLZA_API_KEY"],
             polza_base_url=os.getenv("POLZA_BASE_URL", "https://polza.ai/api/v1").rstrip("/"),
-            grok_model=os.getenv("COUNCIL_GROK_MODEL", "x-ai/grok-4"),
-            gemini_model=os.getenv("COUNCIL_GEMINI_MODEL", "google/gemini-2.5-flash"),
-            deepseek_model=os.getenv("COUNCIL_DEEPSEEK_MODEL", "deepseek/deepseek-chat-v3.1"),
+            china_moonshot_model=os.getenv("COUNCIL_CHINA_MOONSHOT_MODEL", "moonshotai/kimi-k2.5"),
+            china_qwen_model=os.getenv("COUNCIL_CHINA_QWEN_MODEL", "qwen/qwen3.6-plus"),
+            china_deepseek_model=os.getenv("COUNCIL_CHINA_DEEPSEEK_MODEL", "deepseek/deepseek-v3.2"),
+            usa_gemini_model=os.getenv("COUNCIL_USA_GEMINI_MODEL", "google/gemini-3.1-flash-lite-preview"),
+            usa_grok_model=os.getenv("COUNCIL_USA_GROK_MODEL", "x-ai/grok-4.1-fast"),
+            usa_openai_model=os.getenv("COUNCIL_USA_OPENAI_MODEL", "openai/gpt-5.4-nano"),
             log_level=os.getenv("LOG_LEVEL", "INFO"),
         )

@@ -11,9 +11,12 @@
       "cwd": ".",
       "env": {
         "POLZA_BASE_URL": "https://polza.ai/api/v1",
-        "COUNCIL_GROK_MODEL": "x-ai/grok-4",
-        "COUNCIL_GEMINI_MODEL": "google/gemini-2.5-flash",
-        "COUNCIL_DEEPSEEK_MODEL": "deepseek/deepseek-chat-v3.1",
+        "COUNCIL_CHINA_MOONSHOT_MODEL": "moonshotai/kimi-k2.5",
+        "COUNCIL_CHINA_QWEN_MODEL": "qwen/qwen3.6-plus",
+        "COUNCIL_CHINA_DEEPSEEK_MODEL": "deepseek/deepseek-v3.2",
+        "COUNCIL_USA_GEMINI_MODEL": "google/gemini-3.1-flash-lite-preview",
+        "COUNCIL_USA_GROK_MODEL": "x-ai/grok-4.1-fast",
+        "COUNCIL_USA_OPENAI_MODEL": "openai/gpt-5.4-nano",
         "LOG_LEVEL": "INFO"
       }
     }
@@ -38,20 +41,35 @@
         "default": "https://polza.ai/api/v1",
         "description": "Base URL for the Polza API"
       },
-      "COUNCIL_GROK_MODEL": {
+      "COUNCIL_CHINA_MOONSHOT_MODEL": {
         "required": false,
-        "default": "x-ai/grok-4",
-        "description": "Grok model id"
+        "default": "moonshotai/kimi-k2.5",
+        "description": "China preset Kimi model id"
       },
-      "COUNCIL_GEMINI_MODEL": {
+      "COUNCIL_CHINA_QWEN_MODEL": {
         "required": false,
-        "default": "google/gemini-2.5-flash",
-        "description": "Gemini model id"
+        "default": "qwen/qwen3.6-plus",
+        "description": "China preset Qwen model id"
       },
-      "COUNCIL_DEEPSEEK_MODEL": {
+      "COUNCIL_CHINA_DEEPSEEK_MODEL": {
         "required": false,
-        "default": "deepseek/deepseek-chat-v3.1",
-        "description": "DeepSeek model id"
+        "default": "deepseek/deepseek-v3.2",
+        "description": "China preset DeepSeek model id"
+      },
+      "COUNCIL_USA_GEMINI_MODEL": {
+        "required": false,
+        "default": "google/gemini-3.1-flash-lite-preview",
+        "description": "USA preset Gemini model id"
+      },
+      "COUNCIL_USA_GROK_MODEL": {
+        "required": false,
+        "default": "x-ai/grok-4.1-fast",
+        "description": "USA preset Grok model id"
+      },
+      "COUNCIL_USA_OPENAI_MODEL": {
+        "required": false,
+        "default": "openai/gpt-5.4-nano",
+        "description": "USA preset OpenAI model id"
       },
       "LOG_LEVEL": {
         "required": false,

@@ -8,6 +8,6 @@ def test_message_text_string() -> None:
 
 def test_model_guide_mentions_all_models() -> None:
     guide = MODEL_GUIDE.lower()
-    assert "grok" in guide
-    assert "gemini" in guide
+    assert "china" in guide
+    assert "usa" in guide
     assert "deepseek" in guide
