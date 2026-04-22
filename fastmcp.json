@@ -23,7 +23,7 @@
   },
   "server": {
     "name": "model-council-mcp-server",
-    "version": "0.1.0",
+    "version": "0.1.1",
     "description": "Three raw model perspectives from Grok, Gemini, and DeepSeek for Claude to summarize",
     "entrypoint": "model_council_mcp_server.server:create_app",
     "dependencies": [

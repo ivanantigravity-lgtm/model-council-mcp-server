@@ -1,6 +1,6 @@
 [project]
 name = "model-council-mcp-server"
-version = "0.1.0"
+version = "0.1.1"
 description = "MCP server that returns Grok, Gemini, and DeepSeek outputs for Claude to summarize"
 authors = [
     { name = "Ivan Khokholkov" }

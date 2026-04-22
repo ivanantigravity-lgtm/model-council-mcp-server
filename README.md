@@ -1,5 +1,7 @@
 # Model Council MCP Server
 
+`mcp-name: io.github.ivanantigravity-lgtm/model-council-mcp-server`
+
 MCP сервер, который один раз прогоняет одну и ту же задачу через 3 модели.
 
 Есть 2 режима:
